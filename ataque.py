@@ -31,7 +31,7 @@ def mostrar_banner():
     ██████╔╝██║  ██║██║ ╚████║██║  ██╗    ██████╔╝██║  ██║██║ ╚████║██║  ██╗
     ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝
     {RESET}
-    {YELLOW}>>> FERRAMENTA PROFISSIONAL DE PENTESTING BANCÁRIO <<<{RESET}
+    {YELLOW}>>> FERRAMENTA ilegal  DE PENTESTING BANCÁRIO <<<{RESET}
     {RED}ATENÇÃO: Este é apenas um simulador educacional. Qualquer uso ilegal é proibido.{RESET}
     """)
 
@@ -156,7 +156,7 @@ def simular_ataque():
     
     limpar_tela()
     mostrar_banner()
-    print(f"{RED}=== SIMULAÇÃO DE ATAQUE BANCÁRIO ==={RESET}\n")
+    print(f"{RED}=== ATAQUE BANCÁRIO ==={RESET}\n")
     
     print(f"{YELLOW}[*] Selecionando vítima aleatória para o ataque...{RESET}")
     animação_carregamento(3)
@@ -190,7 +190,7 @@ def simular_ataque():
     
     print(f"\n{GREEN}[+] ATAQUE CONCLUÍDO COM SUCESSO!{RESET}")
     print(f"{YELLOW}[*] Saldo transferido: R$ {random.randint(1000, 50000):.2f}{RESET}")
-    print(f"{RED}[!] Esta foi apenas uma simulação. Nenhum dado real foi comprometido.{RESET}")
+  
     
     ataque_em_andamento = False
     input(f"\n{WHITE}Pressione Enter para continuar...{RESET}")
@@ -221,7 +221,7 @@ def menu_principal():
         
         print(f"{CYAN}=== MENU PRINCIPAL ==={RESET}\n")
         print(f"{GREEN}1.{RESET} Adicionar nova vítima")
-        print(f"{GREEN}2.{RESET} Simular ataque bancário")
+        print(f"{GREEN}2.{RESET} ataque bancário")
         print(f"{GREEN}3.{RESET} Listar vítimas registradas")
         print(f"{GREEN}4.{RESET} Sair\n")
         
